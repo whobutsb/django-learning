@@ -1,0 +1,12 @@
+{{ user.email }}
+{% if user.is_authenticated %}
+
+    <h3>Welcome {{ user.email }}</h3>
+    <a href="{% url 'polls:logout' %}">Logout</a>
+
+{% else %}
+
+    <h3>Welcome guest!</h3>
+    <a href="{% url 'polls:login' %}">Login</a>
+
+{% endif %}
