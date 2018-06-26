@@ -24,7 +24,11 @@ def upload(request):
     form = TrackForm(request.POST, request.FILES)
     if form.is_valid():
         # get the mp3 data from the temp path
-        mp3 = eyed3.load(request.FILES['file_path'].file.name)
+        try:
+            mp3 = eyed3.load(request.FILES['file_path'].file.name)
+        except Exception as e:
+            messages.error(request, 'This is not a mp3 file')
+            return redirect('home')
 
         # set the track data
         track = Track(
@@ -38,9 +42,10 @@ def upload(request):
         try:
             track.full_clean()
         except ValidationError as e:
-            raise Exception(e)
+            messages.error(request, 'Error validating: ' + '; '.join(e.messages))
+            return redirect('home')
 
-        messages.success('MP3 Track uploaded')
+        messages.success(request, 'MP3 Track uploaded')
         track.save()
         return redirect('home')
 
