@@ -7,7 +7,4 @@ from music.views import home
 urlpatterns = [
     path('', home.home_view, name='home'),
     path('upload/', home.upload, name='upload'),
-] 
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
