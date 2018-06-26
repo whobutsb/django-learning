@@ -7,7 +7,7 @@ class Track(models.Model):
     artist = models.CharField(max_length=200, null=False)
     album = models.CharField(max_length=200, null=False)
     year = models.IntegerField(null=False)
-    file_path = models.FileField(upload_to='tracks/')
+    file_path = models.FileField(upload_to='tracks')
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
