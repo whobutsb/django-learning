@@ -1,10 +1,69 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+
+<div class="col-sm-12">
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new-playlist">
+        Create New Playlist
+    </button>
+
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Created At</th>
+            <th>Edit</th>
+        </tr>
+        {% for playlist in playlists %}
+            <tr>
+                <td>{{ playlist.name }}</td>
+                <td>{{ playlist.created_at }}</td>
+                <td>Edit</td>
+            </tr>
+
+        {% endfor %}
+    </table>
+
+</div>
+
+<div class="col-sm-12">
     <h1>Hello</h1>
     <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form }}
+        {{ upload_form }}
      <input type="submit" value="Upload">
     </form>
+</div>
+
+<div class="modal fade" id="new-playlist" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create New Playlist</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'playlist_create' %}" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ playlist_form }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Create" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
+
+{# Extending the footer tab to add javascript #}
+
+{% block footer %}
+
+{% endblock %}
+
+

@@ -1,20 +1,29 @@
 import eyed3
 import datetime
 from django import forms
+from django.forms import ModelForm
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.forms.utils import ValidationError
 
-from music.models import Track
+from music.models import Track, Playlist
 
 # Formsets - https://docs.djangoproject.com/en/2.0/topics/forms/formsets/
 class TrackForm(forms.Form):
     file_path = forms.FileField(label='Select a MP3 file',  help_text='max 42MB')
 
+# Create ModelForm  - https://docs.djangoproject.com/en/2.0/topics/forms/modelforms/
+class NewPlaylistForm(ModelForm):
+    class Meta:
+        model = Playlist
+        fields = ['name', ]
+
 def home_view(request):
     return render(request, 'home.html', {
-        'form': TrackForm()
+        'upload_form': TrackForm(),
+        'playlist_form': NewPlaylistForm(),
+        'playlists': Playlist.objects.all(),
     })
 
 # https://simpleisbetterthancomplex.com/tutorial/2016/11/22/django-multiple-file-upload-using-ajax.html
@@ -49,3 +58,12 @@ def upload(request):
         track.save()
         return redirect('home')
 
+def playlist_create(request):
+    form = NewPlaylistForm(request.POST)
+
+    if form.is_valid():
+        playlist = Playlist(name=request.POST['name'])
+        playlist.save()
+
+        messages.success(request, 'Playlist created')
+        return redirect('home')
