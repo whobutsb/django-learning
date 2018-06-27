@@ -58,12 +58,3 @@ def upload(request):
         track.save()
         return redirect('home')
 
-def playlist_create(request):
-    form = NewPlaylistForm(request.POST)
-
-    if form.is_valid():
-        playlist = Playlist(name=request.POST['name'])
-        playlist.save()
-
-        messages.success(request, 'Playlist created')
-        return redirect('home')

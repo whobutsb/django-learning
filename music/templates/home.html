@@ -18,7 +18,7 @@
             <tr>
                 <td>{{ playlist.name }}</td>
                 <td>{{ playlist.created_at }}</td>
-                <td>Edit</td>
+                <td><a href="{% url 'playlist.index' playlist.id %}">Edit</a></td>
             </tr>
 
         {% endfor %}
@@ -44,7 +44,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{% url 'playlist_create' %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'playlist.create' %}" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     {% csrf_token %}
                     {{ playlist_form }}
