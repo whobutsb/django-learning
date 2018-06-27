@@ -11,18 +11,14 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'music/base.css' %}">
+
     <title>Steve Music App</title>
   </head>
   <body>
-      <header>
-        <div class="navbar navbar-dark bg-dark box-shadow">
-            <div class="container d-flex justify-content-between">
-                <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center">
-                    <strong>Steve Music App</strong>
-                </a>
-            </div>
-        </div>
-      </header>
+
+      {% include "base/header.html" %}
 
       {% if messages %}
       <ul class="messages">
@@ -35,7 +31,7 @@
           {% endfor %}
       </ul>
       {% endif %}
-      
+
       <main role="main">
           <div class="container">
             {% block content %}{% endblock %}
