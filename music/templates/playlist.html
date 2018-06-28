@@ -6,6 +6,7 @@
 
     <table class="table">
         <tr>
+            <th>Play</th>
             <th>Title</th>
             <th>Aritst</th>
             <th>Album</th>
@@ -13,6 +14,7 @@
         </tr>
         {% for track in playlist.tracks.all %}
             <tr>
+                <td><button id="{{ track.file_path }}" class="playTrack btn btn-info">Play</button></td>
                 <td>{{ track.title }}</td>
                 <td>{{ track.artist }}</td>
                 <td>{{ track.album }}</td>
@@ -24,5 +26,52 @@
 {% endblock %}
 
 {% block footer %}
+
+<script>
+
+var MEDIA_URL = "{{ media_url }}";
+
+var track = null;
+
+$(function(){
+    function playTrack(button, url){
+        track = SM.getSoundById('track');
+
+        if(track !== undefined){
+            soundManager.stopAll();
+            soundManager.destroySound('track');
+            return false;
+        }
+
+        SM.createSound({
+            id: 'track',
+            volume: 70,
+            url: url,
+            autoPlay: true,
+            onplay: function(){
+                $(button).html('Pause');
+            },
+            onstop: function(){
+                $(button).html('Play');
+            },
+            onfinish: function(){
+                $(button).html('Play');
+                soundManager.destroySound('track');
+            }
+        });
+    }
+
+    var SM = soundManager.setup({
+        debugMode: true,
+        onready: function(){
+            $('body').on('click', '.playTrack', function(){
+                var file = $(this).attr('id');
+                playTrack(this, 'http://' + MEDIA_URL + file)
+            });
+        }
+    });
+})
+
+</script>
 
 {% endblock %}

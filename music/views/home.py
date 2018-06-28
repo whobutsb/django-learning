@@ -3,6 +3,7 @@ import datetime
 from django import forms
 from django.forms import ModelForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.forms.utils import ValidationError
@@ -19,6 +20,7 @@ class NewPlaylistForm(ModelForm):
         model = Playlist
         fields = ['name', ]
 
+@login_required
 def home_view(request):
     return render(request, 'home.html', {
         'upload_form': TrackForm(),
@@ -29,6 +31,7 @@ def home_view(request):
 # https://simpleisbetterthancomplex.com/tutorial/2016/11/22/django-multiple-file-upload-using-ajax.html
 # https://simpleisbetterthancomplex.com/tutorial/2017/08/01/how-to-setup-amazon-s3-in-a-django-project.html
 # https://stackoverflow.com/questions/5871730/need-a-minimal-django-file-upload-example
+@login_required
 def upload(request):
     form = TrackForm(request.POST, request.FILES)
     if form.is_valid():

@@ -11,12 +11,14 @@
     <table class="table">
         <tr>
             <th>Name</th>
+            <th>Number of Songs</th>
             <th>Created At</th>
             <th>Edit</th>
         </tr>
         {% for playlist in playlists %}
             <tr>
                 <td>{{ playlist.name }}</td>
+                <td>{{ playlist.tracks.count }}</td>
                 <td>{{ playlist.created_at }}</td>
                 <td><a href="{% url 'playlist.index' playlist.id %}">Edit</a></td>
             </tr>
@@ -27,7 +29,6 @@
 </div>
 
 <div class="col-sm-12">
-    <h1>Hello</h1>
     <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ upload_form }}
