@@ -11,5 +11,6 @@ urlpatterns = [
     path('login/logout', auth.logout, name="auth.logout"),
     path('upload/', home.upload, name='upload'),
     path('playlist/create', playlist.create, name='playlist.create'),
+    path('playlist/delete/<uuid:playlist_id>', playlist.delete, name='playlist.delete'),
     path('playlist/<uuid:playlist_id>/', playlist.index, name='playlist.index'),
 ]

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,10 @@ SECRET_KEY = 'pb^nkn)!^wiaf9vyp-9d_&b&)%(rla(5!)4l^d3lgzpd53^12j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+if socket.gethostname() == 'django':
+    ALLOWED_HOSTS = ['.stevebarbera.com', '0.0.0.0']
+else:
+    ALLOWED_HOSTS = []
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -86,19 +90,34 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # },
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'music',
-        'USER': 'maestro',
-        'PASSWORD': 'root',
-        'HOST': 'maestro2.test'
+if socket.gethostname() == 'django':
+    DATABASES = {
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.sqlite3',
+        #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # },
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'music',
+            'USER': 'root',
+            'PASSWORD': 'root',
+            'HOST': 'localhost'
+        }
     }
-}
+else:
+    DATABASES = {
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.sqlite3',
+        #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # },
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'music',
+            'USER': 'maestro',
+            'PASSWORD': 'root',
+            'HOST': 'maestro2.test'
+        }
+    }
 
 
 # Password validation

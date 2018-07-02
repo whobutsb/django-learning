@@ -4,7 +4,7 @@
 
 <div class="col-sm-12">
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new-playlist">
+    <button type="button" class="mb-3 btn btn-primary" data-toggle="modal" data-target="#new-playlist">
         Create New Playlist
     </button>
 
@@ -14,13 +14,15 @@
             <th>Number of Songs</th>
             <th>Created At</th>
             <th>Edit</th>
+            <th>Delete</th>
         </tr>
         {% for playlist in playlists %}
             <tr>
                 <td>{{ playlist.name }}</td>
                 <td>{{ playlist.tracks.count }}</td>
                 <td>{{ playlist.created_at }}</td>
-                <td><a href="{% url 'playlist.index' playlist.id %}">Edit</a></td>
+                <td><a href="{{ playlist.get_absolute_url }}">Edit</a></td>
+                <td><a href="{% url 'playlist.delete' playlist.id %}">Delete</a></td>
             </tr>
 
         {% endfor %}
@@ -28,11 +30,18 @@
 
 </div>
 
-<div class="col-sm-12">
+<div class="col-sm-5">
     <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ upload_form }}
-     <input type="submit" value="Upload">
+        <label for="">Upload MP3 File</label>
+        <input type="file" name="file_path" required class="form-control m-1" />
+        <label for="">Choose playlist to add mp3 to </label>
+        <select name="playlist_id" class="form-control m-1">
+        {% for playlist in playlists %}
+            <option value="{{ playlist.id }}">{{ playlist.name }}</option>
+        {% endfor %}
+        </select>
+     <input type="submit" class="btn btn-info" value="Upload">
     </form>
 </div>
 
@@ -48,7 +57,8 @@
             <form action="{% url 'playlist.create' %}" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     {% csrf_token %}
-                    {{ playlist_form }}
+                    <label for="">New Playlist Name</label>
+                    <input type="text" name="name" maxlength="200" required class="form-control" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

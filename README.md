@@ -1,5 +1,7 @@
 # Django Learning
 
+https://www.digitalocean.com/community/tutorials/how-to-serve-django-applications-with-uwsgi-and-nginx-on-ubuntu-14-04
+
 ## Commands
 
 ### Creation Commands

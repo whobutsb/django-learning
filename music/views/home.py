@@ -1,21 +1,22 @@
 import eyed3
-import datetime
 from django import forms
-from django.forms import ModelForm
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.forms.utils import ValidationError
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 from music.models import Track, Playlist
 
 # Formsets - https://docs.djangoproject.com/en/2.0/topics/forms/formsets/
 class TrackForm(forms.Form):
-    file_path = forms.FileField(label='Select a MP3 file',  help_text='max 42MB')
+    file_path = forms.FileField(label='Select a MP3 file', help_text='max 42MB')
+    playlist_id = forms.ChoiceField(
+        label='Select a Playlist',
+        choices=[(p.id, p.name) for p in Playlist.objects.all()]
+    )
 
 # Create ModelForm  - https://docs.djangoproject.com/en/2.0/topics/forms/modelforms/
-class NewPlaylistForm(ModelForm):
+class NewPlaylistForm(forms.ModelForm):
     class Meta:
         model = Playlist
         fields = ['name', ]
@@ -44,20 +45,26 @@ def upload(request):
 
         # set the track data
         track = Track(
-            artist = mp3.tag.artist,
-            title = mp3.tag.title,
-            album = mp3.tag.album,
-            year = mp3.tag.release_date.year,
-            file_path = request.FILES['file_path']
+            artist=mp3.tag.artist,
+            title=mp3.tag.title,
+            album=mp3.tag.album,
+            year=mp3.tag.release_date.year,
+            file_path=request.FILES['file_path']
         )
+
+        # get the playlist
+        playlist = get_object_or_404(Playlist, pk=request.POST['playlist_id'])
+
         # make sure it will process
         try:
             track.full_clean()
-        except ValidationError as e:
-            messages.error(request, 'Error validating: ' + '; '.join(e.messages))
+        except ValidationError as error:
+            messages.error(request, 'Error validating: ' + '; '.join(error.messages))
             return redirect('home')
 
         messages.success(request, 'MP3 Track uploaded')
         track.save()
-        return redirect('home')
 
+        playlist.tracks.add(track)
+
+        return redirect('home')

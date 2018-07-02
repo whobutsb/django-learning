@@ -27,3 +27,25 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+ul.messages {
+    list-style-type: none;
+    margin: 10px;
+}
+
+.messages li {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px;
+    margin: 5px 0 5px 0;
+}
+
+.messages .success {
+    border: 2px #23ff0e solid;
+    background-color: #a2f7da;
+}
+
+.messages .error {
+    border: 2px #ff340e solid;
+    background-color: #ff917c;
+}
