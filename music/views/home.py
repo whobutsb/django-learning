@@ -43,23 +43,28 @@ def upload(request):
             messages.error(request, 'This is not a mp3 file')
             return redirect('home')
 
-        # set the track data
-        track = Track(
-            artist=mp3.tag.artist,
-            title=mp3.tag.title,
-            album=mp3.tag.album,
-            year=mp3.tag.release_date.year,
-            file_path=request.FILES['file_path']
-        )
+        try:
+            # set the track data
+            track = Track(
+                artist=mp3.tag.artist,
+                title=mp3.tag.title,
+                album=mp3.tag.album,
+                year=mp3.tag.release_date.year,
+                file_path=request.FILES['file_path']
+            )
 
-        # get the playlist
-        playlist = get_object_or_404(Playlist, pk=request.POST['playlist_id'])
+            # get the playlist
+            playlist = get_object_or_404(Playlist, pk=request.POST['playlist_id'])
+        except Exception as error:
+            
+            messages.error(request, 'Error uploading mp3 file: ' + str(error))
+            return redirect('home')
 
         # make sure it will process
         try:
             track.full_clean()
         except ValidationError as error:
-            messages.error(request, 'Error validating: ' + '; '.join(error.messages))
+            messages.error(request, 'Error validating: ' + str(error))
             return redirect('home')
 
         messages.success(request, 'MP3 Track uploaded')
